@@ -1,19 +1,23 @@
 ---
+import {format, parse} from 'date-fns';
 export interface Props {
 	title: string;
 	body: string;
 	href: string;
+	startTime: number;
 }
-
-const { href, title, body } = Astro.props as Props;
+const dateFormat = 'MMMM dd, yyyy h:mm a';
+const { href, title, body, startTime } = Astro.props as Props;
 ---
 
 <li class="link-card">
 	<a href={href}>
 		<h2>
 			{title}
-			<span>&rarr;</span>
 		</h2>
+		<p>
+		    {format(parse(startTime, 'T', new Date()), dateFormat)}
+		</p>
 		<p>
 			{body}
 		</p>

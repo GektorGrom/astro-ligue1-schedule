@@ -14,15 +14,13 @@ const matches = [{"isLigueShow":false,"utcDay":"2022-08-20","chanel":"BeIn Sport
                        				href="https://ligue1.com/"
                        				title={`${match.home} vs ${match.away}`}
                        				body={match.title}
+                       				startTime={match.start}
                     />
 		    })}
-
-			<Card
-				href="https://astro.build/integrations/"
-				title="Rendered at"
-				body={renderDate}
-			/>
 		</ul>
+		<div>
+           Rendered at {renderDate}
+        </div>
 	</main>
 </Layout>
 
