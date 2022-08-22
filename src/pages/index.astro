@@ -29,11 +29,13 @@ const QueryInput = {
 const matches = await client.send(new QueryCommand(QueryInput)).then(({ Items }) => Items.map(unmarshall));
 
 const renderDate = new Date().toISOString();
+const timeZone = Astro.request.cf?.timezone;
 ---
 
 <Layout title="Ligue 1 TV Schedule">
 	<main>
 		<h1>Welcome to <span class="text-gradient">Ligue 1</span></h1>
+		<h2>User Time Zone: {timeZone}</h2>
 		<ul role="list" class="link-card-grid">
 		    {matches.map((match) => {
 		        return <Card
