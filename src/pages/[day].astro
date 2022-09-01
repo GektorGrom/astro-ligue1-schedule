@@ -1,11 +1,12 @@
 ---
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
-import { addDays, format, isValid, parse } from "date-fns";
+import { addDays, format, isValid, parse } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import { sameChannel } from '../lib/deduplicationMatches';
 
 const dayFormat = 'yyyy-MM-dd';
 const { day } = Astro.params;
@@ -36,24 +37,41 @@ const QueryInput = {
   },
 };
 const timeZone = Astro.request.cf?.timezone || 'America/Edmonton';
-const matches = await client
+const dedupMatches = await client
   .send(new QueryCommand(QueryInput))
   .then(({ Items }) =>
     Items.map(unmarshall)
       .filter(({ isLive }) => isLive)
-      .map((el) => {
-        return {
-          ...el,
-          startTime: formatInTimeZone(
-            new Date(el.start),
-            timeZone,
-            'yyyy-MM-dd HH:mm',
-          ),
-        };
-      }),
+      .reduce((acc, next) => {
+        const { chanel, start, away, home } = next;        
+        if (acc.some(el => {
+          return el.away === away &&
+          el.home === home &&
+          ((el.start + (10 * 60 * 1000)) > start || (el.start - (10 * 60 * 1000)) < start)
+           &&
+          sameChannel(el.chanel, chanel)
+        })) {
+          return acc;
+        }
+        return acc.concat(next)
+      }, []),
   );
+const matches = dedupMatches.map((el) => {
+  return {
+    ...el,
+    startTime: formatInTimeZone(
+      new Date(el.start),
+      timeZone,
+      'yyyy-MM-dd HH:mm',
+    ),
+  };
+});
 
-const renderDate = formatInTimeZone(new Date(), timeZone, 'yyyy-MM-dd HH:mm:ss');
+const renderDate = formatInTimeZone(
+  new Date(),
+  timeZone,
+  'yyyy-MM-dd HH:mm:ss',
+);
 
 const prevURL = format(addDays(dayDate, -1), dayFormat);
 const nextURL = format(addDays(dayDate, 1), dayFormat);
