@@ -1,13 +1,13 @@
 ---
-import {format, parse} from 'date-fns';
 export interface Props {
 	title: string;
 	body: string;
 	href: string;
 	startTime: number;
+  channel: string;
 }
 const dateFormat = 'MMMM dd, yyyy h:mm a';
-const { href, title, body, startTime } = Astro.props as Props;
+const { href, title, body, startTime, channel } = Astro.props as Props;
 ---
 
 <li class="link-card">
@@ -16,11 +16,14 @@ const { href, title, body, startTime } = Astro.props as Props;
 			{title}
 		</h2>
 		<p>
-		    {format(parse(startTime, 'T', new Date()), dateFormat)}
+		    {startTime}
 		</p>
 		<p>
 			{body}
 		</p>
+    <p>
+      {channel}
+    </p>
 	</a>
 </li>
 <style>
