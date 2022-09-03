@@ -1,0 +1,42 @@
+---
+import getClubLogo from '../lib/getClubLogo';
+
+export interface Props {
+  club: string;
+}
+const { club } = Astro.props as Props;
+const clubLink = getClubLogo(club);
+const isLogoFallback = clubLink === 'ligue1_square.png';
+---
+
+{
+  isLogoFallback ? (
+    <div class="text-center">
+      <div>{club}</div>
+      <img
+        class="object-contain narrow-img"
+        src={`/assets/image/club-logos/${clubLink}`}
+        alt={club}
+      />
+    </div>
+  ) : (
+    <img
+      class="object-contain"
+      src={`/assets/image/club-logos/${clubLink}`}
+      alt={club}
+    />
+  )
+}
+
+<style>
+  img {
+    max-height: 170px;
+    width: 100%;
+    height: 100%;
+    display: inline;
+  }
+  .narrow-img {
+    width: 60%;
+    height: 60%;
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+import Channel from './Channel.astro';
+import Club from './Club.astro';
+
+export interface Props {
+  home: string;
+  away: string;
+  startTime: string;
+  channel: string;
+  isLigueShow: boolean;
+}
+const { home, away, startTime, channel, isLigueShow } = Astro.props as Props;
+---
+
+<li class="grid grid-cols-5 items-center gap-1 font-bold text-xl">
+  {
+    isLigueShow ? (
+      <div class="col-span-3">Ligue 1 show</div>
+    ) : (
+      <>
+        <Club club={home} />
+        <div class="text-center">vs</div>
+        <Club club={away} />
+      </>
+    )
+  }
+
+  <div class="text-center">
+    {startTime}
+  </div>
+  <div>
+    <Channel channel={channel} />
+  </div>
+</li>

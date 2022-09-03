@@ -1,3 +1,7 @@
 ---
-return Astro.redirect('/2022-08-31');
+import { formatInTimeZone } from 'date-fns-tz';
+
+const timeZone = Astro.request.cf?.timezone || 'America/Edmonton';
+const today = formatInTimeZone(new Date(), timeZone, 'yyyy-MM-dd');
+return Astro.redirect('/' + today);
 ---
