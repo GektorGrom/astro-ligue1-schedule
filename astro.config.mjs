@@ -7,5 +7,12 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
-  integrations: [tailwind()]
+  integrations: [tailwind()],
+  vite: {
+    define: {
+      'process.env.AWS_ACCESS_KEY_ID': JSON.stringify(process.env.AWS_ACCESS_KEY_ID),
+      'process.env.AWS_SECRET_ACCESS_KEY': JSON.stringify(process.env.AWS_SECRET_ACCESS_KEY),
+      'process.env.AWS_REGION': JSON.stringify(process.env.AWS_REGION),
+    }
+  }
 });
