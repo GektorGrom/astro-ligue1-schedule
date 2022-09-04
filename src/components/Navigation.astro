@@ -7,8 +7,21 @@ const { nextURL, prevURL } = Astro.props as Props;
 ---
 
 <div
-  class="grid grid-cols-2 bg-slate-300 align-self-bottom mt-auto sticky bottom-0 gap-5"
+  class="drop-shadow-lg grid grid-cols-2 bg-slate-300 align-self-bottom mt-auto sticky bottom-0 gap-5"
 >
   <a class="px-5 py-3" href={prevURL}>Prev</a>
   <a class="text-right px-5 py-3" href={nextURL}>Next</a>
 </div>
+<script define:vars={{ nextURL, prevURL }}>
+  document.addEventListener('keydown', function (event) {
+    console.log(event.code);
+    if (event.code === 'ArrowRight') {
+      event.preventDefault();
+      window.location.href = nextURL;
+    }
+    if (event.code === 'ArrowLeft') {
+      event.preventDefault();
+      window.location.href = prevURL;
+    }
+  });
+</script>
