@@ -8,6 +8,8 @@ import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import { sameChannel } from '../lib/deduplicationMatches';
 import MatchRow from '../components/MatchRow.astro';
+import getClubLogo from '../lib/getClubLogo';
+import Navigation from '../components/Navigation.astro';
 
 const dayFormat = 'yyyy-MM-dd';
 const { day } = Astro.params;
@@ -48,8 +50,8 @@ const dedupMatches = await client
         if (
           acc.some((el) => {
             return (
-              el.away === away &&
-              el.home === home &&
+              getClubLogo(el.away) === getClubLogo(away) &&
+              getClubLogo(el.home) === getClubLogo(home) &&
               (el.start + 10 * 60 * 1000 > start ||
                 el.start - 10 * 60 * 1000 < start) &&
               sameChannel(el.chanel, chanel)
@@ -64,11 +66,7 @@ const dedupMatches = await client
 const matches = dedupMatches.map((el) => {
   return {
     ...el,
-    startTime: formatInTimeZone(
-      new Date(el.start),
-      timeZone,
-      'HH:mm',
-    ),
+    startTime: formatInTimeZone(new Date(el.start), timeZone, 'HH:mm'),
   };
 });
 
@@ -83,33 +81,28 @@ const nextURL = format(addDays(dayDate, 1), dayFormat);
 ---
 
 <Layout title="Ligue 1 TV Schedule">
-  <main class="container mx-auto">
-    <h1>Welcome to <span class="text-gradient">Ligue 1</span></h1>
-    <div class="grid grid-cols-2">
-      <div>
-        <a href={prevURL}>Prev</a>
-      </div>
-      <div class="text-right">
-        <a href={nextURL}>Next</a>
-      </div>
-    </div>
-    <ul role="list" class="space-y-10">
-      {
-        matches.map((match) => {
-          return (
-            <MatchRow
-              home={match.home}
-              away={match.away}
-              startTime={match.startTime}
-              channel={match.chanel}
-              isLigueShow={match.isLigueShow}
-            />
-          );
-        })
-      }
-    </ul>
-    <div class="text-xs text-slate-500 mt-3 text-right">
-      Rendered at {renderDate}
-    </div>
-  </main>
+  <div class="min-h-screen flex flex-col">
+    <main class="container mx-auto mb-5">
+      <h1>Welcome to <span class="text-gradient">Ligue 1</span></h1>
+      <ul role="list" class="space-y-10">
+        {
+          matches.map((match) => {
+            return (
+              <MatchRow
+                home={match.home}
+                away={match.away}
+                startTime={match.startTime}
+                channel={match.chanel}
+                isLigueShow={match.isLigueShow}
+              />
+            );
+          })
+        }
+      </ul>
+    </main>
+    <Navigation nextURL={nextURL} prevURL={prevURL} />
+  </div>
+  <div class="text-xs text-slate-500 text-right">
+    Rendered at {renderDate}
+  </div>
 </Layout>

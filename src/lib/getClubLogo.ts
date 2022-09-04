@@ -94,20 +94,25 @@ const getClubLogo = (team: string):string => {
   }
   // RC Lens
   if (t.includes('lens')) {
-    return 'lens_logo-768x768.png';
+    return 'rc_lens.svg';
   }
   // FC Lorient
   if (t.includes('lorient')) {
     return 'lorient_logo.png';
   }
   // Clermont Foot 63
-  if (t.toLowerCase().includes('clermont')) {
+  if (t.includes('clermont')) {
     return 'clermont-foot.svg';
   }
   // AJ Auxerre
-  if (t.toLowerCase().includes('clermont')) {
-    return 'clermont-foot.svg';
+  if (t.includes('auxerre')) {
+    return 'auxerre.svg';
   }
+  // AJ Ajaccio
+  if (t.includes('ajaccio')) {
+    return 'ajaccio.svg';
+  }
+
   return 'ligue1_square.png';
 };
 export default getClubLogo;
