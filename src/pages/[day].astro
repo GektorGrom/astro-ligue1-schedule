@@ -10,17 +10,35 @@ import MatchRow from '../components/MatchRow.astro';
 import getClubLogo from '../lib/getClubLogo';
 import Navigation from '../components/Navigation.astro';
 
+interface Match {
+  id: string;
+  away: string;
+  chanel: string;
+  competition: string;
+  end: number;
+  home: string;
+  isLigueShow: boolean;
+  isLive: boolean | string;
+  start: number;
+  title: string;
+}
+
 const dayFormat = 'yyyy-MM-dd';
-const { day } = Astro.params;
+const { day }: { day?: string } = Astro.params;
 const dayDate = parse(day, dayFormat, new Date());
 if (!isValid(dayDate)) {
   return Astro.redirect('/not-valid');
 }
+const {
+  AWS_REGION = process.env.AWS_REGION,
+  AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY,
+} = import.meta.env;
 const client = new DynamoDBClient({
-  region: import.meta.env['AWS_REGION'] || process.env.AWS_ACCESS_KEY_ID,
+  region: AWS_REGION,
   credentials: {
-    accessKeyId: import.meta.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: import.meta.env.AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY,
   },
 });
 const QueryInput = {
@@ -38,11 +56,11 @@ const QueryInput = {
     },
   },
 };
-const timeZone = Astro.request.cf?.timezone || 'America/Edmonton';
-const dedupMatches = await client
+const { timezone: timeZone = 'America/Edmonton' } = Astro.request.cf || {};
+const dedupMatches: Match[] = await client
   .send(new QueryCommand(QueryInput))
   .then(({ Items }) =>
-    Items.map(unmarshall)
+    Items.map(Item => unmarshall(Item))
       .filter(({ isLive }) => isLive)
       .reduce((acc, next) => {
         const { chanel, start, away, home } = next;
@@ -81,8 +99,10 @@ const nextURL = format(addDays(dayDate, 1), dayFormat);
 
 <Layout title="Ligue 1 TV Schedule">
   <div class="min-h-screen flex flex-col">
-    <main class="container mx-auto mb-5">
-      <h1>Welcome to <span class="text-gradient">Ligue 1</span></h1>
+    <main class="container mx-auto mb-5 px-2">
+      <h1 class="text-6xl font-normal leading-normal mt-0 mb-2">
+        Welcome to <span class="text-gradient">Ligue 1</span>
+      </h1>
       <ul role="list" class="space-y-10">
         {
           matches.map((match) => {

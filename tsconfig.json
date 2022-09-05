@@ -11,6 +11,7 @@
     "isolatedModules": true,
     // Astro will directly run your TypeScript code, no transpilation needed.
     "noEmit": true,
-    "types": ["@cloudflare/workers-types"]
-  }
+    "lib": ["es2020"]
+  },
+  "types": ["@cloudflare/workers-types"]
 }
