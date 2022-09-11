@@ -7,7 +7,7 @@ const { nextURL, prevURL } = Astro.props as Props;
 ---
 
 <div
-  class="border-slate-200 border-t drop-shadow-lg grid grid-cols-2 bg-slate-100 align-self-bottom mt-auto sticky bottom-0 gap-5"
+  class="border-slate-200 border-t drop-shadow-lg grid grid-cols-2 bg-slate-100 align-self-bottom mt-auto sticky bottom-0 gap-5 dark:bg-neutral-800 dark:border-neutral-900"
 >
   <a class="px-5 py-3" href={prevURL}>Prev</a>
   <a class="text-right px-5 py-3" href={nextURL}>Next</a>

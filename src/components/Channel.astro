@@ -8,7 +8,7 @@ const { channel } = Astro.props as Props;
 const channelLink = getChannelLogo(channel);
 
 ---
-<img src={`/assets/image/channel-logos/${channelLink}`} alt={channel}>
+<img src={`/assets/image/channel-logos/${channelLink}`} alt={channel} class="dark:brightness-75">
 
 <style>
   img {

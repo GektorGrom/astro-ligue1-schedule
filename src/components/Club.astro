@@ -14,14 +14,14 @@ const isLogoFallback = clubLink === 'ligue1_square.png';
     <div class="text-center">
       <div>{club}</div>
       <img
-        class="object-contain narrow-img"
+        class="object-contain narrow-img dark:brightness-75"
         src={`/assets/image/club-logos/${clubLink}`}
         alt={club}
       />
     </div>
   ) : (
     <img
-      class="object-contain"
+      class="object-contain dark:brightness-75"
       src={`/assets/image/club-logos/${clubLink}`}
       alt={club}
     />
