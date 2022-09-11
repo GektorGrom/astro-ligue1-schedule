@@ -60,7 +60,7 @@ const { timezone: timeZone = 'America/Edmonton' } = Astro.request.cf || {};
 const dedupMatches: Match[] = await client
   .send(new QueryCommand(QueryInput))
   .then(({ Items }) =>
-    Items.map(Item => unmarshall(Item))
+    Items.map((Item) => unmarshall(Item))
       .filter(({ isLive }) => isLive)
       .reduce((acc, next) => {
         const { chanel, start, away, home } = next;
@@ -95,14 +95,31 @@ const renderDate = formatInTimeZone(
 
 const prevURL = format(addDays(dayDate, -1), dayFormat);
 const nextURL = format(addDays(dayDate, 1), dayFormat);
+const todayDay = format(dayDate, 'iiii')
 ---
 
 <Layout title="Ligue 1 TV Schedule">
   <div class="min-h-screen flex flex-col">
     <main class="container mx-auto mb-5 px-2">
-      <h1 class="text-6xl font-normal leading-normal mt-0 mb-2">
-        Welcome to <span class="text-gradient">Ligue 1</span>
-      </h1>
+      <div class="grid grid-cols-2 gap-3 my-2 md:my-3">
+        <div>
+          <a href="https://www.ligue1.com/"
+            ><img
+              class="logo-img"
+              src="/assets/image/ligue1logo.png"
+              alt="Ligue 1 logo"
+            />
+          </a>
+        </div>
+        <div class="text-right flex flex-col">
+          <div class="mt-auto text-xl font-bold mb-3">
+            {todayDay}
+          </div>
+          <div>
+            {day}
+          </div>
+        </div>
+      </div>
       <ul role="list" class="space-y-10">
         {
           matches.map((match) => {
@@ -125,3 +142,15 @@ const nextURL = format(addDays(dayDate, 1), dayFormat);
     Rendered at {renderDate}
   </div>
 </Layout>
+
+<style>
+  .logo-img {
+    max-width: 100px;
+  }
+
+  @media (min-width: 768px) {
+    .logo-img {
+      max-width: 150px;
+    }
+  }
+</style>
