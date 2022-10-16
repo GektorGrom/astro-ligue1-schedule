@@ -95,7 +95,7 @@ const renderDate = formatInTimeZone(
 
 const prevURL = format(addDays(dayDate, -1), dayFormat);
 const nextURL = format(addDays(dayDate, 1), dayFormat);
-const todayDay = format(dayDate, 'iiii')
+const todayDay = format(dayDate, 'iiii');
 ---
 
 <Layout title="Ligue 1 TV Schedule">
@@ -120,6 +120,7 @@ const todayDay = format(dayDate, 'iiii')
           </div>
         </div>
       </div>
+      {matches.length === 0 && <div class="text-2xl text-center">No matches for {todayDay}</div>}
       <ul role="list" class="space-y-10">
         {
           matches.map((match) => {
