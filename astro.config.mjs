@@ -8,6 +8,7 @@ export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
   integrations: [tailwind()],
+  compressHTML: true,
   vite: {
     define: {
       'process.env.AWS_ACCESS_KEY_ID': JSON.stringify(process.env.AWS_ACCESS_KEY_ID),
