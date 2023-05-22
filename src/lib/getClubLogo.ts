@@ -1,4 +1,7 @@
 const getClubLogo = (team: string):string => {
+  if (!team) {
+    return 'ligue1_square.png';
+  }
   let t = team.toLowerCase();
   // Paris Saint-Germain
   if (t.includes('paris') || t.includes('psg')) {
